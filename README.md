@@ -1,6 +1,7 @@
 # ALF-EWG — Autonomous Landslide & Flash-Flood Early Warning Grid
 **Course:** Object-Oriented Programming Using C++ (CIC-211) · **Project Option 1** · MAIT, Dept. of CSE
-**Team:** _<Name 1, Enrollment No.>_ , _<Name 2, Enrollment No.>_  **Submit before:** 27 Nov 2026, 11:59 PM
+Name: Aadya Goyal
+Enrollment no.: 33514802725
 
 ## 1. Overview
 A backend that ingests telemetry from solar-powered IoT nodes (soil moisture, seismic geophones,
@@ -88,19 +89,3 @@ TelemetryAuditor  (friend of SensorStation & TelemetryBuffer)
 * **Transaction:** record bytes are written first; only after success is the header `count` rewritten
   (`seekp(0)`). A failure erases the partial record and reloads the header (`seekg(0)`).
 * **Fault injection:** cycle 2 → checksum mismatch, cycle 3 → sensor failure, cycle 5 → threshold overflow, plus a simulated power-loss during logging.
-
-## 7. Likely Viva Questions
-1. Why `virtual` inheritance? What happens to object size/layout (vptr/vbptr)?
-2. Who initializes a virtual base, and why do all concrete ctors name it?
-3. Why is `operator<<` a friend and not a member?
-4. Rule of three: why copy-and-swap in `TelemetryBuffer::operator=`?
-5. Difference between aggregation/composition (`PowerSubsystem`) and inheritance.
-6. Why must the root destructor be `virtual` when deleting via `BaseSensorNode*`?
-7. How does the rollback guarantee file consistency? What if the crash happens after the header write?
-8. Return by reference — what danger exists (dangling reference) and how does the code avoid it?
-
-## 8. Submission Checklist
-- [ ] Fill team names/enrollment numbers above
-- [ ] `git init && git add . && git commit -m "ALF-EWG final" && git push` to a GitHub repository
-- [ ] Zip the folder (without the `alf_ewg` binary) and upload via the Google Form: https://forms.gle/cgWY4vZ3Siep8mmF9
-- [ ] Deadline: 27 Nov 2026, 11:59 PM
