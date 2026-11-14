@@ -1,0 +1,125 @@
+ALF-EWG :: Autonomous Landslide & Flash-Flood Early Warning Grid
+
+==== UNIT I: namespaces, inline, overloading, call/return by reference, friend ====
+computeHazardIndex(rainfall+slope)      = 60.33
+computeHazardIndex(saturation+vibration) = 77.80
+computeHazardIndex(river level+rise)     = 67.50
+computeHazardIndex(combined)             = 70.81
+Translated coordinate: (30.74, 79.05)
+Accumulated state: samples=3 sum=158.70 peak=62.20
+
+==== UNIT II: dynamic memory, deep copy, static members, operators ====
+a[0]=1.00 (unchanged), b[0]=999.00, dyn mean=20.00
+Live buffers inside scope: 3
+Live buffers after scope  : 0 (no leaks)
+
+==== UNIT III: polymorphic sensor sweep (std::vector<BaseSensorNode*>) ====
+Diamond check: root via SolarPoweredNode == root via LoRa ? YES (single shared root)
+Device id=900 firmware=AHP-2.0 sizeof(AutonomousHybridProbe)=5200 bytes
+
+--- Sweep cycle 1 ---
+  st1 SoilMoistureSensor      63.56
+  st1 SeismicGeophone         12.51
+  st1 RiverSonarGauge          3.97
+  st1 AutonomousHybridProbe    8.84
+  st2 SoilMoistureSensor      42.31
+  st2 SeismicGeophone          6.95
+  st2 RiverSonarGauge          2.42
+  st2 AutonomousHybridProbe    5.34
+  st3 SoilMoistureSensor      71.50  [ABOVE WARN]
+  st3 SeismicGeophone         13.83
+  st3 RiverSonarGauge          5.14
+  st3 AutonomousHybridProbe   10.16
+  st4 SoilMoistureSensor      30.89
+  st4 SeismicGeophone          4.39
+  st4 RiverSonarGauge          1.86
+  st4 AutonomousHybridProbe    2.66
++------+--------------------+---------+-----------+-----------+
+| ID   | Station            | Hazard  | Level     | Siren     |
++------+--------------------+---------+-----------+-----------+
+| 1    | Kedarnath_Ridge    | 59.7    | WARNING   | SOUNDING  |
+| 3    | Beas_Valley        | 58.4    | WARNING   | SOUNDING  |
+| 2    | Alaknanda_Gorge    | 36.3    | WATCH     | idle      |
+| 4    | Teesta_Basin       | 26.9    | WATCH     | idle      |
++------+--------------------+---------+-----------+-----------+
+
+--- Sweep cycle 2 ---
+  ! st2 [TelemetryChecksumMismatch] expected 0xfc916804 but computed 0x72dd4fc3 -> packet dropped
++------+--------------------+---------+-----------+-----------+
+| ID   | Station            | Hazard  | Level     | Siren     |
++------+--------------------+---------+-----------+-----------+
+| 3    | Beas_Valley        | 59.4    | WARNING   | SOUNDING  |
+| 1    | Kedarnath_Ridge    | 59.1    | WARNING   | SOUNDING  |
+| 2    | Alaknanda_Gorge    | 28.3    | WATCH     | idle      |
+| 4    | Teesta_Basin       | 19.8    | NORMAL    | idle      |
++------+--------------------+---------+-----------+-----------+
+
+--- Sweep cycle 3 ---
+  ! st3 [SensorFailureException] device #108: SoilMoisture hardware fault (no response)
++------+--------------------+---------+-----------+-----------+
+| ID   | Station            | Hazard  | Level     | Siren     |
++------+--------------------+---------+-----------+-----------+
+| 1    | Kedarnath_Ridge    | 64.2    | WARNING   | SOUNDING  |
+| 3    | Beas_Valley        | 61.2    | WARNING   | SOUNDING  |
+| 2    | Alaknanda_Gorge    | 34.6    | WATCH     | idle      |
+| 4    | Teesta_Basin       | 20.3    | WATCH     | idle      |
++------+--------------------+---------+-----------+-----------+
+
+--- Sweep cycle 4 ---
++------+--------------------+---------+-----------+-----------+
+| ID   | Station            | Hazard  | Level     | Siren     |
++------+--------------------+---------+-----------+-----------+
+| 1    | Kedarnath_Ridge    | 70.4    | EVACUATE  | SOUNDING  |
+| 3    | Beas_Valley        | 65.1    | EVACUATE  | SOUNDING  |
+| 2    | Alaknanda_Gorge    | 34.0    | WATCH     | idle      |
+| 4    | Teesta_Basin       | 22.6    | WATCH     | idle      |
++------+--------------------+---------+-----------+-----------+
+
+--- Sweep cycle 5 ---
+  ! st1 SoilMoistureSensor [ThresholdOverflowException] reading 99.6928 exceeds physical hard limit 98 (sensor saturated?)
++------+--------------------+---------+-----------+-----------+
+| ID   | Station            | Hazard  | Level     | Siren     |
++------+--------------------+---------+-----------+-----------+
+| 1    | Kedarnath_Ridge    | 75.0    | EVACUATE  | SOUNDING  |
+| 3    | Beas_Valley        | 69.6    | EVACUATE  | SOUNDING  |
+| 2    | Alaknanda_Gorge    | 36.9    | WATCH     | idle      |
+| 4    | Teesta_Basin       | 22.5    | WATCH     | idle      |
++------+--------------------+---------+-----------+-----------+
+
+==== UNIT III: RTTI over the fleet and contained PowerSubsystem ====
+  probe #103 st1 LoRa packets=5 @868.00MHz battery=100.00%
+  probe #107 st2 LoRa packets=5 @868.00MHz battery=100.00%
+  probe #111 st3 LoRa packets=5 @868.00MHz battery=100.00%
+  probe #115 st4 LoRa packets=5 @868.00MHz battery=100.00%
+
+==== UNIT II: operator +, >, <<, >> and static members ====
+ZoneVector{Garhwal-Himachal, stations=3, avgHazard=60.49, peakHazard=74.99}
+stations[0] > stations[3] ? yes
+Restored from file via operator>>: 1 Kedarnath_Ridge 30.73 79.07 74.99
+Active stations (static): 7 | Global alert (static): EVACUATE | Siren activations: 4
+  [AUDIT] station 1 (Kedarnath_Ridge) raw ring buffer cap=3 n=3 start=2 raw=[ 70.39 74.99 64.22 ]
+  [AUDIT] station 2 (Alaknanda_Gorge) raw ring buffer cap=3 n=3 start=2 raw=[ 34.01 36.86 34.59 ]
+  [AUDIT] station 3 (Beas_Valley) raw ring buffer cap=3 n=3 start=2 raw=[ 65.10 69.61 61.18 ]
+  [AUDIT] station 4 (Teesta_Basin) raw ring buffer cap=3 n=3 start=2 raw=[ 22.60 22.54 20.28 ]
+
+==== UNIT IV: STL, functors, evacuation routing ====
+  WATCH    : Alaknanda_Gorge Teesta_Basin 
+  EVACUATE : Kedarnath_Ridge Beas_Valley 
+Evacuation order (2 zones at WARNING or above): Kedarnath_Ridge -> Beas_Valley -> END
+
+==== UNIT IV: binary persistence with rollback ====
+Committed incidents before crash test: 10
+Caught: [PersistenceException] simulated power loss mid-write
+Committed incidents after rollback   : 10  (file intact)
+Re-read 10 records from incidents.dat (checksums verified)
+  stn  level     hazard  message
+  1    WARNING   59.73   Kedarnath_Ridge WARNING
+  3    WARNING   58.40   Beas_Valley WARNING
+  3    WARNING   59.36   Beas_Valley WARNING
+  1    WARNING   59.09   Kedarnath_Ridge WARNING
+  1    WARNING   64.22   Kedarnath_Ridge WARNING
+  3    WARNING   61.18   Beas_Valley WARNING
+
+==== RESOURCE REPORT ====
+Active stations after cleanup : 0
+Live telemetry buffers        : 0
